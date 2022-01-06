@@ -7,7 +7,7 @@ const GlobalStyle = createGlobalStyle`
   }
 	
   html {
-		font-family: 'Roboto', sans-serif;
+		font-family: 'Lexend Deca', sans-serif;
 		font-style: normal;
 		font-weight: normal;
     background-color: #FFFFFF;
@@ -15,7 +15,7 @@ const GlobalStyle = createGlobalStyle`
 	
 	button, input {
 		border-width: 0px;
-		font-family: 'Roboto', sans-serif;
+		font-family: 'Lexend Deca', sans-serif;
 		font-style: normal;
 		font-weight: normal;
 	}

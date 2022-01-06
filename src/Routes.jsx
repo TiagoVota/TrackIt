@@ -3,11 +3,11 @@ import { BrowserRouter as Router, Routes, Route } from 'react-router-dom'
 import ResetStyleCSS from './styles/ResetStyleCSS'
 import GlobalStyle from './styles/GlobalStyle'
 
-import Login from './pages/shared/Header'
-import SignUp from './pages/homepage'
-import Habits from './pages/seats'
-import Today from './pages/sessions'
-import History from './pages/success'
+import Login from './pages/login'
+import SignUp from './pages/signUp'
+import Habits from './pages/habits'
+import Today from './pages/today'
+import History from './pages/history'
 
 
 const PagesRoutes = () => {
