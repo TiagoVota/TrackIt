@@ -8,7 +8,7 @@ const App = () => {
 	const [userInfo, setUserInfo] = useState({})
 	
 	return (
-		<UserContext.Provider value={{userInfo, setUserInfo}}>
+		<UserContext.Provider value={{ userInfo, setUserInfo }}>
 			<PagesRoutes />
 		</UserContext.Provider>
 	)

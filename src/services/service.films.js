@@ -2,12 +2,13 @@ import axios from 'axios'
 
 import BASE_URL from './baseUrl'
 
+const AUTH_URL = `${BASE_URL}/auth`
 
-const getSomething = () => {
-	return axios.get(`${BASE_URL}/something`)
+const postLogin = ({ body }) => {
+	return axios.post(`${AUTH_URL}/login`, body)
 }
 
 
 export {
-	getSomething,
+	postLogin,
 }
