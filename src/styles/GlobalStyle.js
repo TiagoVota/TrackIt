@@ -10,6 +10,7 @@ const GlobalStyle = createGlobalStyle`
 		font-family: 'Lexend Deca', sans-serif;
 		font-style: normal;
 		font-weight: normal;
+		color: #666666;
     background-color: #FFFFFF;
   }
 	
@@ -18,6 +19,8 @@ const GlobalStyle = createGlobalStyle`
 		font-family: 'Lexend Deca', sans-serif;
 		font-style: normal;
 		font-weight: normal;
+		color: #666666;
+    background-color: #FFFFFF;
 	}
 
 	a {
