@@ -1,9 +1,9 @@
 import { useContext, useState } from 'react'
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import styled from 'styled-components'
 
 import UserContext from '../../contexts/UserContext'
-import { postLogin } from '../../services/service.films'
+import { postLogin } from '../../services/service.auth'
 
 import logo from '../../assets/logo.svg'
 import LoaderSpinner from '../shared/LoaderSpinner'
@@ -14,6 +14,7 @@ const Login = () => {
 	const [email, setEmail] = useState('')
 	const [password, setPassword] = useState('')
 	const [isLoading, setIsLoading] = useState(false)
+	const navigate = useNavigate()
 
 	const handleSubmit = (event) => {
 		event.preventDefault()
@@ -28,7 +29,9 @@ const Login = () => {
 		postLogin({ body }).then(({ data }) => {
 			setUserInfo(data)
 			clearInputs()
+			navigate('/hoje')
 		}).catch(error => {
+			alert('deu ruim :(')
 			console.log('login error:', error.response)
 		}).finally(() => setIsLoading(false))
 	}
