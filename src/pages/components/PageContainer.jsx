@@ -1,19 +1,25 @@
+import { useContext } from 'react'
 import styled from 'styled-components'
+
+import UserContext from '../../contexts/UserContext'
 
 import Footer, { footerHeight } from '../shared/Footer'
 import Header, { headerHeight } from '../shared/Header'
 
 
 const PageContainer = ({ children }) => {
+	const { userInfo } = useContext(UserContext)
+	const { image, percentage } = userInfo
+
 	return (
 		<>
-			<Header />
+			<Header profileImage={image} />
 
 			<Container>
 				{children}
 			</Container>
 
-			<Footer />
+			<Footer percentage={percentage} />
 		</>
 	)
 }

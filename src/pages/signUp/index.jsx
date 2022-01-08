@@ -33,7 +33,7 @@ const SignUp = () => {
 		postSignUp({ body }).then(({ data }) => {
 			setUserInfo(data)
 			clearInputs()
-			navigate('/hoje')
+			navigate('/')
 		}).catch(error => {
 			alert('deu ruim :(')
 			console.log('signUp error:', error.response)
