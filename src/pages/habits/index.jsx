@@ -30,9 +30,10 @@ const Habits = () => {
 			// setHabitsList(mockEmptyHabits)
 			setHabitsList(mockHabits)
 		}).catch(error => {
+			console.log('habits error:', error.response)
 			alert('Deu ruim ao pegar os hábitos!')
 		})
-	}, [token])
+	}, [token, habitsList])
 
 	const displayHabits = (habitsList) => {
 		return (
@@ -97,5 +98,9 @@ const HabitsContainer = styled.div`
 		margin-top: 10px;
 		font-size: 18px;
 		line-height: 22px;
+	}
+
+	&:last-child {
+		margin-bottom: 37px;
 	}
 `

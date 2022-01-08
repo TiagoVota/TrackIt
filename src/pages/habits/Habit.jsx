@@ -1,11 +1,31 @@
+import { useContext } from 'react'
 import { IoTrashOutline } from 'react-icons/io5'
 import styled from 'styled-components'
+
+import UserContext from '../../contexts/UserContext'
+import { deleteHabits } from '../../services/service.habits'
 
 import DaysContainer from '../shared/DaysContainer'
 
 
 const Habit = ({ habitInfo }) => {
+	// TODO: Olá Thiago, nesse caso aqui, vale mais a pena eu pegar novamente o token
+	// pelo UserContext, passar o token por props no index ou definir a função que lida
+	// com o delete do hábito diretamente pelo index?
+	const { userInfo: { token } } = useContext(UserContext)
 	const { id, name, days } = habitInfo
+
+	const removeHabit = () => {
+		const confirmDelete = confirm('Quer deletar mesmo?!')
+		if (!confirmDelete) return
+
+		deleteHabits({ token, id }).then(() => {
+			alert('Habito deletado!')
+		}).catch(error => {
+			alert('Deu para delatar o hábito não :(')
+			console.log('delete habit error:', error.response)
+		})
+	}
 
 	return (
 		<Box>
@@ -13,7 +33,7 @@ const Habit = ({ habitInfo }) => {
 
 			<DaysContainer handleDayClick={() => {}} daysSelected={days} />
 
-			<TrashButton>
+			<TrashButton onClick={removeHabit}>
 				<IoTrashOutline
 					color={'#666666'}
 					size="15px"
