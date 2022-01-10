@@ -24,10 +24,10 @@ export {
 const headerHeight = '70px'
 
 const Container = styled.div`
+	position: fixed;
 	height: ${headerHeight};
 	width: 100vw;
 	padding: 0 5vw;
-	position: absolute;
 	top: 0;
 	left: 0;
 	display: flex;

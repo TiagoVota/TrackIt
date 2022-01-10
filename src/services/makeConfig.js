@@ -1,7 +1,7 @@
 const makeConfig = (token) => {
 	const config = {
 		headers: {
-			Authorization: `Bearer ${token}`
+			'Authorization': `Bearer ${token}`
 		}
 	}
 

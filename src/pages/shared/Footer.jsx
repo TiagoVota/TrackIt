@@ -4,7 +4,7 @@ import { useNavigate } from 'react-router-dom'
 import styled from 'styled-components'
 
 
-const Footer = ({ percentage=66 }) => {
+const Footer = ({ percentage }) => {
 	// TODO: Olá Thiago, estou com problemas com o header e o footer tendo uma borda
 	// de 1px na direita, como resolver?
 	const navigate = useNavigate()
@@ -17,7 +17,7 @@ const Footer = ({ percentage=66 }) => {
 
 			<TodayButton onClick={() => navigate('/hoje')}>
 				<CircularProgressbar
-					value={percentage}
+					value={percentage || 0}
 					text={'Hoje'}
 					background
 					backgroundPadding={6}
@@ -47,9 +47,9 @@ export {
 const footerHeight = '70px'
 
 const Container = styled.div`
+	position: fixed;
 	width: 100vw;
 	height: ${footerHeight};
-	position: absolute;
 	left: 0px;
 	bottom: 0px;
 	display: flex;
@@ -65,10 +65,10 @@ const Container = styled.div`
 `
 
 const TodayButton = styled.button`
+	position: absolute;
 	width: 91px;
 	height: 91px;
-	position: absolute;
-	top: -41.5px;
+	bottom: calc(${footerHeight} - (91px / 2));
 	left: calc((100vw - 91px) / 2);
 	border-radius: 50%;
 	padding: 0;
