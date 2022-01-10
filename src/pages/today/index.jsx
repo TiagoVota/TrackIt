@@ -7,6 +7,7 @@ import { getTodayHabits } from '../../services/service.habits'
 import { makePercentage } from '../../utils/makePercentage'
 
 import PageContainer from '../components/PageContainer'
+import LoaderSpinner from '../shared/LoaderSpinner'
 import TodayHabit from './TodayHabit'
 
 
@@ -14,16 +15,18 @@ const Today = () => {
 	const { userInfo, setUserInfo } = useContext(UserContext)
 	const { token } = userInfo
 	const [todayList, setTodayList] = useState([])
+	const [isLoading, setIsLoading] = useState(true)
 	const [updateHabits, setUpdateHabits] = useState({})
 	const percentage = makePercentage(todayList)
 
 	useEffect(() => {
+		setIsLoading(true)
 		getTodayHabits({ token }).then(({ data }) => {
 			setTodayList(data)
 		}).catch(error => {
 			console.log('today error:', error.response)
 			alert('Deu ruim ao pegar os hábitos de hoje!')
-		})
+		}).finally(() => setIsLoading(false))
 	}, [token, updateHabits])
 
 	useEffect(() => {
@@ -58,13 +61,19 @@ const Today = () => {
 
 	return (
 		<PageContainer>
-			<TitleContainer someHabitCompleat={percentage > 0}>
-				<h1>{getTodayInfo()}</h1>
+			{
+				isLoading
+					? <LoaderSpinner type='TailSpin' />
+					: <>
+						<TitleContainer someHabitCompleat={percentage > 0}>
+							<h1>{getTodayInfo()}</h1>
 
-				<h2>{displayCompleatHabitsMsg()}</h2>
-			</TitleContainer>
+							<h2>{displayCompleatHabitsMsg()}</h2>
+						</TitleContainer>
 
-			<HabitsContainer>{displayTodayHabits()}</HabitsContainer>
+						<HabitsContainer>{displayTodayHabits()}</HabitsContainer>
+					</>
+			}
 		</PageContainer>
 	)
 }

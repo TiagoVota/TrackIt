@@ -2,12 +2,12 @@ import Loader from 'react-loader-spinner'
 import styled from 'styled-components'
 
 
-const LoaderSpinner = ({ type, color, height, width, heightDiscount }) => {
+const LoaderSpinner = ({ type, color, height, width }) => {
 	return (
-		<Container heightDiscount={heightDiscount || '0px'}>
+		<Container>
 			<Loader
 				type={type || 'ThreeDots'}
-				color={color || '#126BA5'}
+				color={color || '#52B6FF'}
 				height={height || width || '100'}
 				width={width || height || '100'}
 			/>
@@ -20,7 +20,7 @@ export default LoaderSpinner
 
 
 const Container = styled.div`
-	height: calc(100% - ${p => p.heightDiscount});
+	height: 100%;
 	width: 100%;
 	display: flex;
 	justify-content: center;

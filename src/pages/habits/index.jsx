@@ -7,21 +7,24 @@ import { getHabits } from '../../services/service.habits'
 import PageContainer from '../components/PageContainer'
 import NewHabit from './NewHabit'
 import Habit from './Habit'
+import LoaderSpinner from '../shared/LoaderSpinner'
 
 
 const Habits = () => {
 	const { userInfo: { token } } = useContext(UserContext)
 	const [habitsList, setHabitsList] = useState([])
+	const [isLoading, setIsLoading] = useState(true)
 	const [isNewHabitHidden, setIsNewHabitHidden] = useState(true)
 	const [updateHabits, setUpdateHabits] = useState({})
 
 	useEffect(() => {
+		setIsLoading(true)
 		getHabits({ token }).then(({ data }) => {
 			setHabitsList(data)
 		}).catch(error => {
 			console.log('habits error:', error.response)
 			alert('Deu ruim ao pegar os hábitos!')
-		})
+		}).finally(() => setIsLoading(false))
 	}, [token, updateHabits])
 
 	const displayHabits = (habitsList) => {
@@ -43,19 +46,25 @@ const Habits = () => {
 
 	return (
 		<PageContainer>
-			<TitleContainer>
-				<h1>Meus hábitos</h1>
+			{
+				isLoading
+					? <LoaderSpinner type='TailSpin' />
+					: <>
+						<TitleContainer>
+							<h1>Meus hábitos</h1>
 
-				<button onClick={handleAddHabitCLick}>+</button>
-			</TitleContainer>
+							<button onClick={handleAddHabitCLick}>+</button>
+						</TitleContainer>
 
-			{<NewHabit
-				setUpdateHabits={setUpdateHabits}
-				setIsHidden={setIsNewHabitHidden}
-				isHidden={isNewHabitHidden}
-			/>}
+						{<NewHabit
+							setUpdateHabits={setUpdateHabits}
+							setIsHidden={setIsNewHabitHidden}
+							isHidden={isNewHabitHidden}
+						/>}
 
-			<HabitsContainer>{displayHabits(habitsList)}</HabitsContainer>
+						<HabitsContainer>{displayHabits(habitsList)}</HabitsContainer>
+					</>
+			}
 		</PageContainer>
 	)
 }
