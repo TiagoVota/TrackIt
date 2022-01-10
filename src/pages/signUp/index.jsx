@@ -4,12 +4,12 @@ import styled from 'styled-components'
 
 import UserContext from '../../contexts/UserContext'
 import { postSignUp } from '../../services/service.auth'
-
-import logo from '../../assets/logo.svg'
-import LoaderSpinner from '../shared/LoaderSpinner'
 import { validateSignUp } from '../../validations/authValidations'
 import { handleValidation } from '../../validations/handleValidation'
 import { errorModal } from '../../factories/modalFactory'
+
+import logo from '../../assets/logo.svg'
+import LoaderSpinner from '../shared/LoaderSpinner'
 
 
 const SignUp = () => {

@@ -3,12 +3,12 @@ import styled from 'styled-components'
 
 import UserContext from '../../contexts/UserContext'
 import { getHabits } from '../../services/service.habits'
+import { errorModal } from '../../factories/modalFactory'
 
 import PageContainer from '../components/PageContainer'
 import NewHabit from './NewHabit'
 import Habit from './Habit'
 import LoaderSpinner from '../shared/LoaderSpinner'
-import { errorModal } from '../../factories/modalFactory'
 
 
 const Habits = () => {
@@ -52,24 +52,22 @@ const Habits = () => {
 
 	return (
 		<PageContainer>
+			<TitleContainer>
+				<h1>Meus hábitos</h1>
+
+				<button onClick={handleAddHabitCLick}>+</button>
+			</TitleContainer>
+
+			{<NewHabit
+				setUpdateHabits={setUpdateHabits}
+				setIsHidden={setIsNewHabitHidden}
+				isHidden={isNewHabitHidden}
+			/>}
+
 			{
 				isLoading
 					? <LoaderSpinner type='TailSpin' />
-					: <>
-						<TitleContainer>
-							<h1>Meus hábitos</h1>
-
-							<button onClick={handleAddHabitCLick}>+</button>
-						</TitleContainer>
-
-						{<NewHabit
-							setUpdateHabits={setUpdateHabits}
-							setIsHidden={setIsNewHabitHidden}
-							isHidden={isNewHabitHidden}
-						/>}
-
-						<HabitsContainer>{displayHabits(habitsList)}</HabitsContainer>
-					</>
+					: <HabitsContainer>{displayHabits(habitsList)}</HabitsContainer>
 			}
 		</PageContainer>
 	)

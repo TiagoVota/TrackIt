@@ -67,18 +67,16 @@ const Today = () => {
 
 	return (
 		<PageContainer>
+			<TitleContainer someHabitCompleat={percentage > 0}>
+				<h1>{getTodayInfo()}</h1>
+
+				<h2>{!isLoading && displayCompleatHabitsMsg()}</h2>
+			</TitleContainer>
+
 			{
 				isLoading
 					? <LoaderSpinner type='TailSpin' />
-					: <>
-						<TitleContainer someHabitCompleat={percentage > 0}>
-							<h1>{getTodayInfo()}</h1>
-
-							<h2>{displayCompleatHabitsMsg()}</h2>
-						</TitleContainer>
-
-						<HabitsContainer>{displayTodayHabits()}</HabitsContainer>
-					</>
+					: <HabitsContainer>{displayTodayHabits()}</HabitsContainer>
 			}
 		</PageContainer>
 	)
