@@ -22,6 +22,8 @@ const SignUp = () => {
 	const navigate = useNavigate()
 
 	const errorMsg = {
+		409: 'E-mail já cadastrado 😔<br/>Insira outro, por favor 🥺',
+		422: 'Erro ao preencher algum dos campos, tente algo diferente!',
 		postSignUp: `Não conseguimos fazer o cadastro 😔<br/>
 		Atualize a página ou tente novamente mais tarde, por favor 🥺`,
 	}
