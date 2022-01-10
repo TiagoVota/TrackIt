@@ -7,7 +7,7 @@ import { postHabit } from '../../services/service.habits'
 import DaysContainer from '../shared/DaysContainer'
 
 
-const NewHabit = ({ setCreationStatus }) => {
+const NewHabit = ({ setCreationStatus, setUpdateHabits }) => {
 	const { userInfo: { token } } = useContext(UserContext)
 	const [habitInfo, setHabitInfo] = useState({ name: '', days: [] })
 	const [isLoading, setIsLoading] = useState(false)
@@ -40,9 +40,12 @@ const NewHabit = ({ setCreationStatus }) => {
 	const submitNewHabit = (event) => {
 		event.preventDefault()
 
+		if (days.length === 0) return alert('Insira pelo menos um dia!')
+
 		setIsLoading(true)
 		postHabit({ token, body: habitInfo }).then(() => {
 			setCreationStatus(false)
+			setUpdateHabits({})
 		}).catch((error) => {
 			console.log('habits creation error:', error.response)
 			alert('Deu ruim ao criar o hábito!')

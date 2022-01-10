@@ -13,6 +13,7 @@ const Habits = () => {
 	const { userInfo: { token } } = useContext(UserContext)
 	const [habitsList, setHabitsList] = useState([])
 	const [isNewHabitCrating, setIsNewHabitCrating] = useState(false)
+	const [updateHabits, setUpdateHabits] = useState({})
 
 	useEffect(() => {
 		getHabits({ token }).then(({ data }) => {
@@ -21,12 +22,16 @@ const Habits = () => {
 			console.log('habits error:', error.response)
 			alert('Deu ruim ao pegar os hábitos!')
 		})
-	}, [token, habitsList])
+	}, [token, updateHabits])
 
 	const displayHabits = (habitsList) => {
 		return (
 			Boolean(habitsList[0])
-				? habitsList.map((habit, idx) => <Habit key={idx} habitInfo={habit} />)
+				? habitsList.map((habit, idx) => <Habit
+					key={idx}
+					habitInfo={habit}
+					setUpdateHabits={setUpdateHabits}
+				/>)
 				: <p>
 					Você não tem nenhum hábito cadastrado ainda.
 					Adicione um hábito para começar a trackear!
@@ -44,7 +49,10 @@ const Habits = () => {
 				<button onClick={handleAddHabitCLick}>+</button>
 			</TitleContainer>
 
-			{isNewHabitCrating && <NewHabit setCreationStatus={setIsNewHabitCrating}/>}
+			{isNewHabitCrating && <NewHabit
+				setUpdateHabits={setUpdateHabits}
+				setCreationStatus={setIsNewHabitCrating}
+			/>}
 
 			<HabitsContainer>{displayHabits(habitsList)}</HabitsContainer>
 		</PageContainer>

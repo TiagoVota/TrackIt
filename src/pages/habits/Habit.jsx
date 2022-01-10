@@ -8,7 +8,7 @@ import { deleteHabit } from '../../services/service.habits'
 import DaysContainer from '../shared/DaysContainer'
 
 
-const Habit = ({ habitInfo }) => {
+const Habit = ({ habitInfo, setUpdateHabits }) => {
 	// TODO: Olá Thiago, nesse caso aqui, vale mais a pena eu pegar novamente o token
 	// pelo UserContext, passar o token por props no index ou definir a função que lida
 	// com o delete do hábito diretamente pelo index?
@@ -20,6 +20,7 @@ const Habit = ({ habitInfo }) => {
 		if (!confirmDelete) return
 
 		deleteHabit({ token, id }).then(() => {
+			setUpdateHabits({})
 			alert('Habito deletado!')
 		}).catch(error => {
 			alert('Deu para delatar o hábito não :(')
