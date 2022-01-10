@@ -5,7 +5,7 @@ import styled from 'styled-components'
 import UserContext from '../../contexts/UserContext'
 import { deleteHabit } from '../../services/service.habits'
 
-import DaysContainer from '../shared/DaysContainer'
+import DaysContainer from './DaysContainer'
 
 
 const Habit = ({ habitInfo, setUpdateHabits }) => {
