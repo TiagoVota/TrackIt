@@ -4,7 +4,7 @@ import styled from 'styled-components'
 import UserContext from '../../contexts/UserContext'
 import { postHabit } from '../../services/service.habits'
 
-import DaysContainer from '../shared/DaysContainer'
+import DaysContainer from './DaysContainer'
 
 
 const NewHabit = ({ setCreationStatus, setUpdateHabits }) => {
