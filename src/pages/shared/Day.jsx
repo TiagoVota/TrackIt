@@ -3,7 +3,11 @@ import styled from 'styled-components'
 
 const Day = ({ char, isSelected, index, onClick: handleClick }) => {
 	return (
-		<Button onClick={() => handleClick(index)} isSelected={isSelected}>
+		<Button
+			type='button'
+			onClick={() => handleClick(index)}
+			isSelected={isSelected}
+		>
 			{char}
 		</Button>
 	)

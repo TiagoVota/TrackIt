@@ -5,30 +5,18 @@ import UserContext from '../../contexts/UserContext'
 import { getHabits } from '../../services/service.habits'
 
 import PageContainer from '../components/PageContainer'
+import NewHabit from './NewHabit'
 import Habit from './Habit'
 
-const mockEmptyHabits = []
-const mockHabits = [
-	{
-		id: 1,
-		name: 'Nome do hábito',
-		days: [1, 3, 5]
-	},
-	{
-		id: 2,
-		name: 'Nome do hábito 2',
-		days: [1, 3, 4, 6]
-	}
-]
+
 const Habits = () => {
 	const { userInfo: { token } } = useContext(UserContext)
 	const [habitsList, setHabitsList] = useState([])
+	const [isNewHabitCrating, setIsNewHabitCrating] = useState(false)
 
 	useEffect(() => {
 		getHabits({ token }).then(({ data }) => {
-			// setHabitsList(data)
-			// setHabitsList(mockEmptyHabits)
-			setHabitsList(mockHabits)
+			setHabitsList(data)
 		}).catch(error => {
 			console.log('habits error:', error.response)
 			alert('Deu ruim ao pegar os hábitos!')
@@ -46,18 +34,18 @@ const Habits = () => {
 		)
 	}
 
+	const handleAddHabitCLick = () => setIsNewHabitCrating(!isNewHabitCrating)
+
 	return (
 		<PageContainer>
 			<TitleContainer>
 				<h1>Meus hábitos</h1>
 
-				<button>+</button>
+				<button onClick={handleAddHabitCLick}>+</button>
 			</TitleContainer>
 
-			<NewHabitBox>
+			{isNewHabitCrating && <NewHabit setCreationStatus={setIsNewHabitCrating}/>}
 
-			</NewHabitBox>
-			
 			<HabitsContainer>{displayHabits(habitsList)}</HabitsContainer>
 		</PageContainer>
 	)
@@ -85,9 +73,6 @@ const TitleContainer = styled.div`
 		color: #FFFFFF;
 		background: #52B6FF;
 	}
-`
-const NewHabitBox = styled.div`
-	
 `
 
 const HabitsContainer = styled.div`

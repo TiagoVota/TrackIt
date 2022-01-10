@@ -3,7 +3,7 @@ import { IoTrashOutline } from 'react-icons/io5'
 import styled from 'styled-components'
 
 import UserContext from '../../contexts/UserContext'
-import { deleteHabits } from '../../services/service.habits'
+import { deleteHabit } from '../../services/service.habits'
 
 import DaysContainer from '../shared/DaysContainer'
 
@@ -19,7 +19,7 @@ const Habit = ({ habitInfo }) => {
 		const confirmDelete = confirm('Quer deletar mesmo?!')
 		if (!confirmDelete) return
 
-		deleteHabits({ token, id }).then(() => {
+		deleteHabit({ token, id }).then(() => {
 			alert('Habito deletado!')
 		}).catch(error => {
 			alert('Deu para delatar o hábito não :(')

@@ -11,12 +11,17 @@ const getHabits = ({ token }) => {
 	return axios.get(`${BASE_URL}/habits`, makeConfig(token))
 }
 
-const deleteHabits = ({ token, id }) => {
+const postHabit = ({ token, body }) => {
+	return axios.post(`${BASE_URL}/habits`, body, makeConfig(token))
+}
+
+const deleteHabit = ({ token, id }) => {
 	return axios.delete(`${BASE_URL}/habits/${id}`, makeConfig(token))
 }
 
 
 export {
 	getHabits,
-	deleteHabits,
+	postHabit,
+	deleteHabit,
 }
