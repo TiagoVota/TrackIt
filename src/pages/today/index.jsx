@@ -37,17 +37,17 @@ const Today = () => {
 	const { userInfo, setUserInfo } = useContext(UserContext)
 	const { token } = userInfo
 	const [todayList, setTodayList] = useState([])
+	const [updateHabits, setUpdateHabits] = useState({})
 	const percentage = makePercentage(todayList)
 
 	useEffect(() => {
 		getTodayHabits({ token }).then(({ data }) => {
 			setTodayList(data)
-			// setTodayList(mockTodayList)
 		}).catch(error => {
 			console.log('today error:', error.response)
 			alert('Deu ruim ao pegar os hábitos de hoje!')
 		})
-	}, [token])
+	}, [token, updateHabits])
 
 	useEffect(() => {
 		setUserInfo({
@@ -70,7 +70,7 @@ const Today = () => {
 				? todayList.map((todayHabit, idx) => <TodayHabit
 					key={idx}
 					habitInfo={todayHabit}
-					setUpdateHabits={'setUpdateHabits'}
+					setUpdateHabits={setUpdateHabits}
 				/>)
 				: <p>
 					Você não tem nenhum hábito cadastrado ainda.

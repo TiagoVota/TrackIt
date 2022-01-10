@@ -1,33 +1,53 @@
+import { useContext, useState } from 'react'
 import { IoCheckbox } from 'react-icons/io5'
 import styled from 'styled-components'
 
+import UserContext from '../../contexts/UserContext'
+import { postCheckOrUncheckHabit } from '../../services/service.habits'
 
-const TodayHabit = ({ habitInfo }) => {
+
+const TodayHabit = ({ habitInfo, setUpdateHabits }) => {
+	const { userInfo: { token } } = useContext(UserContext)
 	const {id, name, done, currentSequence, highestSequence } = habitInfo
+	const [isLoading, setIsLoading] = useState(false)
 
-	const sequenceDisplay = (value) => {
-		const dayDisplay = value > 1 ? 'dias' : 'dia'
-		return `${value} ${dayDisplay}`
+	const handleClick = () => {
+		setIsLoading(true)
+		postCheckOrUncheckHabit({ token, id, isAlreadyChecked: done }).then(() => {
+			setUpdateHabits({})
+		}).catch(error => {
+			alert('Deu para atualizar o hábito não :(')
+			console.log('update habit error:', error.response)
+		}).finally(() => setIsLoading(false))
 	}
 
+	const verifyIsRecord = () => {
+		return currentSequence === highestSequence && highestSequence > 0
+	}
+
+	const sequenceDisplay = (sequenceValue) => {
+		const dayDisplay = sequenceValue > 1 ? 'dias' : 'dia'
+		return `${sequenceValue} ${dayDisplay}`
+	}
+	
 	return (
-		<Container>
+		<ContainerButton disabled={isLoading} onClick={handleClick}>
 			<TextBox>
 				<h3>{name}</h3>
 
-				<H4 isDone={done}>
+				<SequenceH4 isDone={done}>
 					Sequência atual: <span>{sequenceDisplay(currentSequence)}</span>
-				</H4>
-				<H5 isRecord={currentSequence === highestSequence && highestSequence > 0}>
+				</SequenceH4>
+				<RecordH5 isRecord={verifyIsRecord()}>
 					Seu recorde: <span>{sequenceDisplay(highestSequence)}</span>
-				</H5>
+				</RecordH5>
 			</TextBox>
 
 			<IoCheckbox
 				color={`${done ? '#8FC549' : '#EBEBEB'}`}
 				size="80px"
 			/>
-		</Container>
+		</ContainerButton>
 	)
 }
 
@@ -35,7 +55,7 @@ const TodayHabit = ({ habitInfo }) => {
 export default TodayHabit
 
 
-const Container = styled.div`
+const ContainerButton = styled.button`
 	width: 100%;
 	height: 94px;
 	padding: 13px 13px 17px 15px;
@@ -43,6 +63,7 @@ const Container = styled.div`
 	display: flex;
 	align-items: center;
 	justify-content: space-between;
+	text-align: start;
 	border-radius: 5px;
 	background-color: #FFFFFF;
 `
@@ -59,13 +80,14 @@ const TextBox = styled.div`
 		line-height: 16px;
 	}
 `
-const H4 = styled.h4`
+
+const SequenceH4 = styled.h4`
 	> span {
 		color: ${p => p.isDone ? '#8FC549' : '#666666'};
 	}
 `
 
-const H5 = styled.h5`
+const RecordH5 = styled.h5`
 	> span {
 		color: ${p => p.isRecord ? '#8FC549' : '#666666'};
 	}

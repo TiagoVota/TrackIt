@@ -25,10 +25,16 @@ const getTodayHabits = ({ token }) => {
 	return axios.get(`${HABITS_URL}/today`, makeConfig(token))
 }
 
+const postCheckOrUncheckHabit = ({ token, id, isAlreadyChecked }) => {
+	const type = isAlreadyChecked ? 'uncheck' : 'check'
+	return axios.post(`${HABITS_URL}/${id}/${type}`, {}, makeConfig(token))
+}
+
 
 export {
 	getHabits,
 	postHabit,
 	deleteHabit,
 	getTodayHabits,
+	postCheckOrUncheckHabit,
 }
