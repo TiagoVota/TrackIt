@@ -10,29 +10,6 @@ import PageContainer from '../components/PageContainer'
 import TodayHabit from './TodayHabit'
 
 
-const mockTodayList = [
-	{
-		'id': 3,
-		'name': 'Acordar',
-		'done': true,
-		'currentSequence': 1,
-		'highestSequence': 1
-	},
-	{
-		'id': 4,
-		'name': 'Acordar 2',
-		'done': false,
-		'currentSequence': 1,
-		'highestSequence': 2
-	},
-	{
-		'id': 5,
-		'name': 'Acordar 3',
-		'done': true,
-		'currentSequence': 1,
-		'highestSequence': 2
-	}
-]
 const Today = () => {
 	const { userInfo, setUserInfo } = useContext(UserContext)
 	const { token } = userInfo
