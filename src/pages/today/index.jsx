@@ -2,6 +2,7 @@ import { useContext, useEffect, useState } from 'react'
 import styled from 'styled-components'
 
 import UserContext from '../../contexts/UserContext'
+import { errorModal } from '../../factories/modalFactory'
 import { getTodayInfo } from '../../services/service.dayjs'
 import { getTodayHabits } from '../../services/service.habits'
 import { makePercentage } from '../../utils/makePercentage'
@@ -19,13 +20,18 @@ const Today = () => {
 	const [updateHabits, setUpdateHabits] = useState({})
 	const percentage = makePercentage(todayList)
 
+	const errorMsg = {
+		401: 'Não autorizado(a) 😔<br/>Refaça seu login, por favor 🥺',
+		getTodayHabits: `Não conseguimos carregar seus hábitos diários 😔<br/>
+		Atualize a página ou tente novamente mais tarde, por favor 🥺`,
+	}
+
 	useEffect(() => {
 		setIsLoading(true)
 		getTodayHabits({ token }).then(({ data }) => {
 			setTodayList(data)
-		}).catch(error => {
-			console.log('today error:', error.response)
-			alert('Deu ruim ao pegar os hábitos de hoje!')
+		}).catch(({ response: { status } }) => {
+			errorModal(errorMsg[status] || errorMsg.getTodayHabits)
 		}).finally(() => setIsLoading(false))
 	}, [token, updateHabits])
 

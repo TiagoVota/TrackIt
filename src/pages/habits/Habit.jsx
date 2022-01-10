@@ -3,6 +3,7 @@ import { IoTrashOutline } from 'react-icons/io5'
 import styled from 'styled-components'
 
 import UserContext from '../../contexts/UserContext'
+import { confirmModal, errorModal, successModal } from '../../factories/modalFactory'
 import { deleteHabit } from '../../services/service.habits'
 
 import DaysContainer from './DaysContainer'
@@ -16,18 +17,31 @@ const Habit = ({ habitInfo, setUpdateHabits }) => {
 	const { id, name, days } = habitInfo
 	const [isDeleting, setIsDeleting] = useState(false)
 
-	const removeHabit = () => {
-		const confirmDelete = confirm('Quer deletar mesmo?!')
-		if (!confirmDelete) return
+	const errorMsg = {
+		401: 'Não autorizado(a) 😔<br/>Refaça seu login, por favor 🥺',
+		deleteHabit: `Não conseguimos deletar seu hábito 😔<br/>
+		Atualize a página ou tente novamente mais tarde, por favor 🥺`,
+	}
 
+	const handleRemoveHabit = () => {
 		setIsDeleting(true)
+		confirmModal(
+			'Deseja mesmo deletar ess hábito?',
+			'Essa ação não poderá ser desfeita 🥺',
+			'Sim, delete ele!'
+		).then(({ isConfirmed }) => {
+			if (isConfirmed) removeHabit()
+			setIsDeleting(false)
+		})
+	}
+
+	const removeHabit = () => {
 		deleteHabit({ token, id }).then(() => {
 			setUpdateHabits({})
-			alert('Habito deletado!')
-		}).catch(error => {
-			alert('Deu para delatar o hábito não :(')
-			console.log('delete habit error:', error.response)
-		}).finally(() => setIsDeleting(false))
+			successModal('Deletado!')
+		}).catch(({ response: { status } }) => {
+			errorModal(errorMsg[status] || errorMsg.postCheckOrUncheckHabit)
+		})
 	}
 
 	return (
@@ -36,7 +50,7 @@ const Habit = ({ habitInfo, setUpdateHabits }) => {
 
 			<DaysContainer handleDayClick={() => {}} daysSelected={days} />
 
-			<TrashButton disabled={isDeleting} onClick={removeHabit}>
+			<TrashButton disabled={isDeleting} onClick={handleRemoveHabit}>
 				<IoTrashOutline
 					color={'#666666'}
 					size="15px"

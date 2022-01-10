@@ -2,10 +2,13 @@ import { useContext, useState } from 'react'
 import styled from 'styled-components'
 
 import UserContext from '../../contexts/UserContext'
+import { errorModal } from '../../factories/modalFactory'
 import { postHabit } from '../../services/service.habits'
-import LoaderSpinner from '../shared/LoaderSpinner'
+import { validateHabitCreation } from '../../validations/habitsValidations'
+import { handleValidation } from '../../validations/handleValidation'
 
 import DaysContainer from './DaysContainer'
+import LoaderSpinner from '../shared/LoaderSpinner'
 
 
 const NewHabit = ({ setIsHidden, setUpdateHabits, isHidden }) => {
@@ -14,6 +17,13 @@ const NewHabit = ({ setIsHidden, setUpdateHabits, isHidden }) => {
 	const [habitInfo, setHabitInfo] = useState(initialHabitInfo)
 	const [isLoading, setIsLoading] = useState(false)
 	const { name, days } = habitInfo
+
+	const errorMsg = {
+		401: 'Não autorizado(a) 😔<br/>Refaça seu login, por favor 🥺',
+		noDaysPost: 'Insira ao menos um dia para seu hábito 🥺',
+		postHabit: `Não conseguimos criar o hábito 😔<br/>
+		Atualize a página ou tente novamente mais tarde, por favor 🥺`,
+	}
 
 	const handleDayClick = (dayNumber) => {
 		const newDays = [...days]
@@ -42,16 +52,22 @@ const NewHabit = ({ setIsHidden, setUpdateHabits, isHidden }) => {
 	const submitNewHabit = (event) => {
 		event.preventDefault()
 
-		if (days.length === 0) return alert('Insira pelo menos um dia!')
+		if (days.length === 0) return errorModal(errorMsg.noDaysPost)
+
+		const {
+			isValid,
+			error
+		}	= handleValidation(habitInfo, validateHabitCreation)
+		
+		if (!isValid) return errorModal(error)
 
 		setIsLoading(true)
 		postHabit({ token, body: habitInfo }).then(() => {
 			setUpdateHabits({})
 			setIsHidden(true)
 			setHabitInfo(initialHabitInfo)
-		}).catch((error) => {
-			console.log('habits creation error:', error.response)
-			alert('Deu ruim ao criar o hábito!')
+		}).catch(({ response: { status } }) => {
+			errorModal(errorMsg[status] || errorMsg.postHabit)
 		}).finally(() => setIsLoading(false))
 	}
 

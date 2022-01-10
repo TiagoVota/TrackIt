@@ -7,6 +7,9 @@ import { postSignUp } from '../../services/service.auth'
 
 import logo from '../../assets/logo.svg'
 import LoaderSpinner from '../shared/LoaderSpinner'
+import { validateSignUp } from '../../validations/authValidations'
+import { handleValidation } from '../../validations/handleValidation'
+import { errorModal } from '../../factories/modalFactory'
 
 
 const SignUp = () => {
@@ -18,6 +21,11 @@ const SignUp = () => {
 	const [isLoading, setIsLoading] = useState(false)
 	const navigate = useNavigate()
 
+	const errorMsg = {
+		postSignUp: `Não conseguimos fazer o cadastro 😔<br/>
+		Atualize a página ou tente novamente mais tarde, por favor 🥺`,
+	}
+
 	const handleSubmit = (event) => {
 		event.preventDefault()
 
@@ -28,15 +36,21 @@ const SignUp = () => {
 			image		
 		}
 
+		const {
+			isValid,
+			error
+		}	= handleValidation(body, validateSignUp)
+		
+		if (!isValid) return errorModal(error)
+
 		setIsLoading(true)
 
 		postSignUp({ body }).then(({ data }) => {
 			setUserInfo(data)
 			clearInputs()
 			navigate('/')
-		}).catch(error => {
-			alert('deu ruim :(')
-			console.log('signUp error:', error.response)
+		}).catch(({ response: { status } }) => {
+			errorModal(errorMsg[status] || errorMsg.postSignUp)
 		}).finally(() => setIsLoading(false))
 	}
 

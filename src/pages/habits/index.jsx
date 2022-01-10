@@ -8,6 +8,7 @@ import PageContainer from '../components/PageContainer'
 import NewHabit from './NewHabit'
 import Habit from './Habit'
 import LoaderSpinner from '../shared/LoaderSpinner'
+import { errorModal } from '../../factories/modalFactory'
 
 
 const Habits = () => {
@@ -17,13 +18,18 @@ const Habits = () => {
 	const [isNewHabitHidden, setIsNewHabitHidden] = useState(true)
 	const [updateHabits, setUpdateHabits] = useState({})
 
+	const errorMsg = {
+		401: 'Não autorizado(a) 😔<br/>Refaça seu login, por favor 🥺',
+		getHabits: `Não conseguimos carregar seus hábitos 😔<br/>
+		Atualize a página ou tente novamente mais tarde, por favor 🥺`,
+	}
+
 	useEffect(() => {
 		setIsLoading(true)
 		getHabits({ token }).then(({ data }) => {
 			setHabitsList(data)
-		}).catch(error => {
-			console.log('habits error:', error.response)
-			alert('Deu ruim ao pegar os hábitos!')
+		}).catch(({ response: { status } }) => {
+			errorModal(errorMsg[status] || errorMsg.getHabits)
 		}).finally(() => setIsLoading(false))
 	}, [token, updateHabits])
 

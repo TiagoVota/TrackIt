@@ -7,6 +7,9 @@ import { postLogin } from '../../services/service.auth'
 
 import logo from '../../assets/logo.svg'
 import LoaderSpinner from '../shared/LoaderSpinner'
+import { validateLogin } from '../../validations/authValidations'
+import { handleValidation } from '../../validations/handleValidation'
+import { errorModal } from '../../factories/modalFactory'
 
 
 const Login = () => {
@@ -16,6 +19,13 @@ const Login = () => {
 	const [isLoading, setIsLoading] = useState(false)
 	const navigate = useNavigate()
 
+	const errorMsg = {
+		422: 'E-mail não cadastrado 😔',
+		401: 'E-mail e/ou senha inválido(s) 😔',
+		postLogin: `Não conseguimos fazer o Login 😔<br/>
+		Atualize a página ou tente novamente mais tarde, por favor 🥺`,
+	}
+
 	const handleSubmit = (event) => {
 		event.preventDefault()
 
@@ -24,15 +34,20 @@ const Login = () => {
 			password
 		}
 
-		setIsLoading(true)
+		const {
+			isValid,
+			error
+		}	= handleValidation(body, validateLogin)
+		
+		if (!isValid) return errorModal(error)
 
+		setIsLoading(true)
 		postLogin({ body }).then(({ data }) => {
 			setUserInfo(data)
 			clearInputs()
 			navigate('/hoje')
-		}).catch(error => {
-			alert('deu ruim :(')
-			console.log('login error:', error.response)
+		}).catch(({ response: { status } }) => {
+			errorModal(errorMsg[status] || errorMsg.postLogin)
 		}).finally(() => setIsLoading(false))
 	}
 
