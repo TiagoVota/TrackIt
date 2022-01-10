@@ -3,25 +3,34 @@ import styled from 'styled-components'
 
 import UserContext from '../../contexts/UserContext'
 import { getHabits } from '../../services/service.habits'
+import { errorModal } from '../../factories/modalFactory'
 
 import PageContainer from '../components/PageContainer'
 import NewHabit from './NewHabit'
 import Habit from './Habit'
+import LoaderSpinner from '../shared/LoaderSpinner'
 
 
 const Habits = () => {
 	const { userInfo: { token } } = useContext(UserContext)
 	const [habitsList, setHabitsList] = useState([])
+	const [isLoading, setIsLoading] = useState(true)
 	const [isNewHabitHidden, setIsNewHabitHidden] = useState(true)
 	const [updateHabits, setUpdateHabits] = useState({})
 
+	const errorMsg = {
+		401: 'Não autorizado(a) 😔<br/>Refaça seu login, por favor 🥺',
+		getHabits: `Não conseguimos carregar seus hábitos 😔<br/>
+		Atualize a página ou tente novamente mais tarde, por favor 🥺`,
+	}
+
 	useEffect(() => {
+		setIsLoading(true)
 		getHabits({ token }).then(({ data }) => {
 			setHabitsList(data)
-		}).catch(error => {
-			console.log('habits error:', error.response)
-			alert('Deu ruim ao pegar os hábitos!')
-		})
+		}).catch(({ response: { status } }) => {
+			errorModal(errorMsg[status] || errorMsg.getHabits)
+		}).finally(() => setIsLoading(false))
 	}, [token, updateHabits])
 
 	const displayHabits = (habitsList) => {
@@ -55,7 +64,11 @@ const Habits = () => {
 				isHidden={isNewHabitHidden}
 			/>}
 
-			<HabitsContainer>{displayHabits(habitsList)}</HabitsContainer>
+			{
+				isLoading
+					? <LoaderSpinner type='TailSpin' />
+					: <HabitsContainer>{displayHabits(habitsList)}</HabitsContainer>
+			}
 		</PageContainer>
 	)
 }

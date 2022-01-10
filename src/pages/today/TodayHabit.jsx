@@ -3,6 +3,7 @@ import { IoCheckbox } from 'react-icons/io5'
 import styled from 'styled-components'
 
 import UserContext from '../../contexts/UserContext'
+import { errorModal } from '../../factories/modalFactory'
 import { postCheckOrUncheckHabit } from '../../services/service.habits'
 
 
@@ -11,13 +12,18 @@ const TodayHabit = ({ habitInfo, setUpdateHabits }) => {
 	const {id, name, done, currentSequence, highestSequence } = habitInfo
 	const [isLoading, setIsLoading] = useState(false)
 
+	const errorMsg = {
+		401: 'Não autorizado(a) 😔<br/>Refaça seu login, por favor 🥺',
+		postCheckOrUncheckHabit: `Não conseguimos atualizar seu hábito 😔<br/>
+		Atualize a página ou tente novamente mais tarde, por favor 🥺`,
+	}
+
 	const handleClick = () => {
 		setIsLoading(true)
 		postCheckOrUncheckHabit({ token, id, isAlreadyChecked: done }).then(() => {
 			setUpdateHabits({})
-		}).catch(error => {
-			alert('Deu para atualizar o hábito não :(')
-			console.log('update habit error:', error.response)
+		}).catch(({ response: { status } }) => {
+			errorModal(errorMsg[status] || errorMsg.postCheckOrUncheckHabit)
 		}).finally(() => setIsLoading(false))
 	}
 
