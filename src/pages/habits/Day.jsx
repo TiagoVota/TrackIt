@@ -1,12 +1,13 @@
 import styled from 'styled-components'
 
 
-const Day = ({ char, isSelected, index, onClick: handleClick }) => {
+const Day = ({ char, isSelected, index, onClick: handleClick, isDisabled }) => {
 	return (
 		<Button
 			type='button'
 			onClick={() => handleClick(index)}
 			isSelected={isSelected}
+			disabled={isDisabled}
 		>
 			{char}
 		</Button>

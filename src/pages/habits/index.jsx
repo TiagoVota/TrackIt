@@ -12,7 +12,7 @@ import Habit from './Habit'
 const Habits = () => {
 	const { userInfo: { token } } = useContext(UserContext)
 	const [habitsList, setHabitsList] = useState([])
-	const [isNewHabitCrating, setIsNewHabitCrating] = useState(false)
+	const [isNewHabitHidden, setIsNewHabitHidden] = useState(true)
 	const [updateHabits, setUpdateHabits] = useState({})
 
 	useEffect(() => {
@@ -39,7 +39,7 @@ const Habits = () => {
 		)
 	}
 
-	const handleAddHabitCLick = () => setIsNewHabitCrating(!isNewHabitCrating)
+	const handleAddHabitCLick = () => setIsNewHabitHidden(!isNewHabitHidden)
 
 	return (
 		<PageContainer>
@@ -49,9 +49,10 @@ const Habits = () => {
 				<button onClick={handleAddHabitCLick}>+</button>
 			</TitleContainer>
 
-			{isNewHabitCrating && <NewHabit
+			{<NewHabit
 				setUpdateHabits={setUpdateHabits}
-				setCreationStatus={setIsNewHabitCrating}
+				setIsHidden={setIsNewHabitHidden}
+				isHidden={isNewHabitHidden}
 			/>}
 
 			<HabitsContainer>{displayHabits(habitsList)}</HabitsContainer>

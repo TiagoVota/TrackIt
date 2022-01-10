@@ -1,15 +1,17 @@
-import { useContext, useEffect, useState } from 'react'
+import { useContext, useState } from 'react'
 import styled from 'styled-components'
 
 import UserContext from '../../contexts/UserContext'
 import { postHabit } from '../../services/service.habits'
+import LoaderSpinner from '../shared/LoaderSpinner'
 
 import DaysContainer from './DaysContainer'
 
 
-const NewHabit = ({ setCreationStatus, setUpdateHabits }) => {
+const NewHabit = ({ setIsHidden, setUpdateHabits, isHidden }) => {
 	const { userInfo: { token } } = useContext(UserContext)
-	const [habitInfo, setHabitInfo] = useState({ name: '', days: [] })
+	const initialHabitInfo = { name: '', days: [] }
+	const [habitInfo, setHabitInfo] = useState(initialHabitInfo)
 	const [isLoading, setIsLoading] = useState(false)
 	const { name, days } = habitInfo
 
@@ -44,16 +46,25 @@ const NewHabit = ({ setCreationStatus, setUpdateHabits }) => {
 
 		setIsLoading(true)
 		postHabit({ token, body: habitInfo }).then(() => {
-			setCreationStatus(false)
 			setUpdateHabits({})
+			setIsHidden(true)
+			setHabitInfo(initialHabitInfo)
 		}).catch((error) => {
 			console.log('habits creation error:', error.response)
 			alert('Deu ruim ao criar o hábito!')
 		}).finally(() => setIsLoading(false))
 	}
 
+	const makeSubmitButtonText = () => {
+		return (
+			isLoading
+				? <LoaderSpinner width={'35px'} color={'#FFFFFF'} />
+				: 'Salvar'
+		)
+	}
+
 	return (
-		<Box>
+		<Box isHidden={isHidden}>
 			<form onSubmit={submitNewHabit}>
 				<Input
 					placeholder='Nome do hábito'
@@ -68,15 +79,26 @@ const NewHabit = ({ setCreationStatus, setUpdateHabits }) => {
 				<DaysContainer
 					handleDayClick={handleDayClick}
 					daysSelected={days}
+					isDaysDisabled={isLoading}
 				/>
 
 				<ButtonsContainer>
-					<CancelButton type='button' onClick={() => setCreationStatus(false)}>
+					<CancelButton
+						type='button'
+						onClick={() => setIsHidden(true)}
+						disabled={isLoading}
+						isLoading={isLoading}
+					>
 						Cancelar
 					</CancelButton>
 
-					<ConfirmButton type='submit' onClick={submitNewHabit}>
-						Salvar
+					<ConfirmButton
+						type='submit'
+						onClick={submitNewHabit}
+						disabled={isLoading}
+						isLoading={isLoading}
+					>
+						{makeSubmitButtonText()}
 					</ConfirmButton>
 				</ButtonsContainer>
 
@@ -94,7 +116,7 @@ const Box = styled.div`
 	height: 180px;
 	padding: 13px 0 15px 15px;
 	margin: 0 auto 20px;
-	display: flex;
+	display: ${p => p.isHidden ? 'none' : 'flex'};
 	flex-direction: column;
 	justify-content: space-between;
 	background: #FFFFFF;
@@ -110,6 +132,7 @@ const Input = styled.input`
 	border-radius: 5px;
 	font-size: 20px;
 	line-height: 25px;
+	background-color: ${p => p.isLoading ? '#F2F2F2' : '#FFFFFF'};
 
 	::placeholder {
 		color: #DBDBDB;
@@ -138,9 +161,11 @@ const ButtonsContainer = styled.div`
 
 const CancelButton = styled.button`
 	color: #52B6FF;
+	opacity: ${p => p.isLoading ? 0.7 : 1};
 `
 
 const ConfirmButton = styled.button`
 	color: #FFFFFF;
 	background: #52B6FF;
+	opacity: ${p => p.isLoading ? 0.7 : 1};
 `

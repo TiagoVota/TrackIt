@@ -1,4 +1,4 @@
-import { useContext } from 'react'
+import { useContext, useState } from 'react'
 import { IoTrashOutline } from 'react-icons/io5'
 import styled from 'styled-components'
 
@@ -14,18 +14,20 @@ const Habit = ({ habitInfo, setUpdateHabits }) => {
 	// com o delete do hábito diretamente pelo index?
 	const { userInfo: { token } } = useContext(UserContext)
 	const { id, name, days } = habitInfo
+	const [isDeleting, setIsDeleting] = useState(false)
 
 	const removeHabit = () => {
 		const confirmDelete = confirm('Quer deletar mesmo?!')
 		if (!confirmDelete) return
 
+		setIsDeleting(true)
 		deleteHabit({ token, id }).then(() => {
 			setUpdateHabits({})
 			alert('Habito deletado!')
 		}).catch(error => {
 			alert('Deu para delatar o hábito não :(')
 			console.log('delete habit error:', error.response)
-		})
+		}).finally(() => setIsDeleting(false))
 	}
 
 	return (
@@ -34,7 +36,7 @@ const Habit = ({ habitInfo, setUpdateHabits }) => {
 
 			<DaysContainer handleDayClick={() => {}} daysSelected={days} />
 
-			<TrashButton onClick={removeHabit}>
+			<TrashButton disabled={isDeleting} onClick={removeHabit}>
 				<IoTrashOutline
 					color={'#666666'}
 					size="15px"

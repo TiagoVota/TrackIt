@@ -1,9 +1,7 @@
-import styled from 'styled-components'
-
 import Day from './Day'
 
 
-const DaysContainer = ({ daysSelected, handleDayClick }) => {
+const DaysContainer = ({ daysSelected, handleDayClick, isDaysDisabled }) => {
 	const displayDays = (daysSelected) => {
 		return [...'DSTQQSS'].map((char, index) => <Day
 			key={index}
@@ -11,17 +9,14 @@ const DaysContainer = ({ daysSelected, handleDayClick }) => {
 			onClick={handleDayClick}
 			char={char}
 			isSelected={daysSelected.includes(index)}
+			isDisabled={isDaysDisabled}
 		/>)
 	}
 
 	return (
-		<Container>{displayDays(daysSelected)}</Container>
+		<div>{displayDays(daysSelected)}</div>
 	)
 }
 
 
 export default DaysContainer
-
-
-const Container = styled.div`
-`
